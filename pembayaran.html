@@ -1,1 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dompet Hellsing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{
+  --band:#6a0c17; --bg:#0d0709; --card:#1a0d11; --card2:#241218; --ink:#f0e7dd; --muted:#b3a0a6;
+  --line:#3a2229; --blood:#a3101f; --blood2:#d1283b; --lens:#e8a33d; --onblood:#fff6ee;
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --band:#6a0c17; --bg:#0d0709; --card:#1a0d11; --card2:#241218; --ink:#f0e7dd; --muted:#b3a0a6;
+    --line:#3a2229; --blood:#a3101f; --blood2:#d1283b; --lens:#e8a33d; --onblood:#fff6ee;
+  }
+}
+:root[data-theme="dark"]{
+  --band:#6a0c17; --bg:#0d0709; --card:#1a0d11; --card2:#241218; --ink:#f0e7dd; --muted:#b3a0a6;
+  --line:#3a2229; --blood:#a3101f; --blood2:#d1283b; --lens:#e8a33d; --onblood:#fff6ee;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);
+  background:linear-gradient(180deg,var(--band),#3a070d) top/100% calc(190px + env(safe-area-inset-top,0px)) no-repeat, var(--bg)}
+body{margin:0;color:var(--ink);font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45;font-size:16px}
+main{max-width:520px;margin:0 auto;padding:18px 14px 40px}
+h1{font-family:Cinzel,Georgia,serif;font-weight:700;font-size:20px;margin:0 0 16px 4px;letter-spacing:.02em}
+h2{font-family:Cinzel,Georgia,serif;font-weight:700;font-size:17px;margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.label{margin:0;color:var(--muted);font-size:15px}
+.top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.bal-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rp{color:var(--muted);font-size:18px;font-weight:600}
+.bal{font-size:36px;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+button{font:inherit;cursor:pointer;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:8px;padding:10px 16px;font-weight:600}
+button:hover{background:var(--card2)}
+button.primary{background:var(--blood);border-color:var(--blood);color:var(--onblood)}
+button.primary:hover{background:var(--blood2);border-color:var(--blood2)}
+button.ghost{border-color:var(--blood2);color:var(--ink)}
+:focus-visible{outline:3px solid var(--lens);outline-offset:2px}
+.lens{padding:4px;min-width:44px;min-height:40px;border:0;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}
+.lens svg{display:block}
+.lens .l{fill:var(--lens);stroke:#2a1500;stroke-width:1.5}
+.lens .hl{stroke:#fff;stroke-opacity:.6;stroke-width:1.5;stroke-linecap:round}
+.lens .br{stroke:var(--lens);stroke-width:2;fill:none}
+.lens .cut{stroke:var(--blood2);stroke-width:2.5;stroke-linecap:round;display:none}
+.lens[aria-pressed="true"] .l{fill:#2a1a1e;stroke:var(--lens)}
+.lens[aria-pressed="true"] .hl{display:none}
+.lens[aria-pressed="true"] .cut{display:block}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+.range{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.range span{color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border-radius:999px;padding:7px 14px;font-weight:500;font-size:15px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:#3a0f17;border-color:var(--blood2);color:var(--ink)}
+.stats{display:grid;grid-template-columns:1fr 1fr;margin-top:18px}
+.stat{display:flex;gap:12px;align-items:center}
+.stat+.stat{border-left:1px solid var(--line);padding-left:16px}
+.stat p{margin:0}
+.stat .v{font-size:22px;font-weight:700}
+.ico{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
+.ico svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.in{background:var(--blood)} .out{background:#b8741a} .doc{background:#5a3b6b}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+li:last-child{border-bottom:0}
+li .mid{flex:1;min-width:0}
+li .t{font-weight:600} li .d{font-size:14px;color:var(--muted)}
+li .r{text-align:right}
+li .a{font-weight:700;font-size:17px}
+li .m{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+.empty{color:var(--muted);margin:14px 0 4px}
+dialog{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:20px;width:min(380px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.65)}
+label{display:block;font-weight:600;margin:12px 0 6px}
+input{font:inherit;width:100%;padding:12px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.msg{min-height:22px;margin:10px 0 0;color:var(--blood2);font-weight:600;font-size:15px}
+.acts{display:flex;gap:8px;margin-top:6px}
+.acts .primary{flex:1}
+.grid{display:flex;flex-direction:column;gap:14px}
+@media (min-width:640px){
+  main{max-width:680px;padding:28px 24px 56px}
+  h1{font-size:24px;margin-bottom:20px}
+  .card{padding:24px}
+  .bal{font-size:44px}
+  li{padding:16px 0}
+}
+@media (min-width:980px){
+  main{max-width:1080px}
+  .grid{display:grid;grid-template-columns:400px 1fr;gap:20px;align-items:start}
+  .grid>section:first-child{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+}
+@media (max-width:380px){
+  main{padding:14px 10px 32px}
+  .card{padding:14px}
+  .bal{font-size:30px}
+  .stats{grid-template-columns:1fr;gap:14px}
+  .stat+.stat{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:14px}
+  .top-row .primary{width:100%}
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Dompet Hellsing</h1>
 
+  <div class="grid">
+  <section class="card" aria-label="Ringkasan saldo">
+    <div class="top-row">
+      <div>
+        <p class="label">Total saldo</p>
+        <div class="bal-line">
+          <span class="rp">Rp</span><span class="bal" id="saldo" aria-live="polite">0</span>
+          <button class="lens" id="btnMata" type="button" aria-pressed="false" aria-label="Sembunyikan saldo">
+            <svg width="44" height="24" viewBox="0 0 44 24" aria-hidden="true">
+              <rect class="l" x="2" y="3" width="17" height="15" rx="7"/>
+              <rect class="l" x="25" y="3" width="17" height="15" rx="7"/>
+              <path class="br" d="M19 8 Q22 5 25 8"/>
+              <path class="hl" d="M6 8 L10 6 M29 8 L33 6"/>
+              <path class="cut" d="M5 21 L39 1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button class="primary" id="btnTarik" type="button">Tarik saldo</button>
+    </div>
+    <hr>
+    <div class="range">
+      <span id="tgl"></span>
+      <div class="chips" role="group" aria-label="Rentang waktu">
+        <button class="chip" type="button" data-r="1" aria-pressed="true">Hari ini</button>
+        <button class="chip" type="button" data-r="7" aria-pressed="false">7 hari</button>
+        <button class="chip" type="button" data-r="30" aria-pressed="false">30 hari</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <span class="ico in"><svg viewBox="0 0 24 24"><path d="M12 5v13M7 13l5 5 5-5"/></svg></span>
+        <div><p class="label">Uang masuk</p><p class="v" id="masuk">Rp0</p></div>
+      </div>
+      <div class="stat">
+        <span class="ico doc"><svg viewBox="0 0 24 24"><path d="M7 3h8l3 3v15H7z M10 11h5 M10 15h5"/></svg></span>
+        <div><p class="label">Total transaksi</p><p class="v" id="total">0</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="Transaksi">
+    <div class="head">
+      <h2 id="judulList">10 transaksi terbaru</h2>
+      <button class="ghost" id="btnSemua" type="button">Lihat semua</button>
+    </div>
+    <p class="empty" id="kosong" hidden>Belum ada transaksi di rentang ini. Pilih rentang yang lebih lama.</p>
+    <ul id="daftar"></ul>
+  </section>
+  </div>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlgJudul">
+  <h2 id="dlgJudul">Tarik saldo</h2>
+  <label for="nom">Nominal (Rp)</label>
+  <input id="nom" inputmode="numeric" autocomplete="off" placeholder="Contoh: 500">
+  <p class="msg" id="msg" aria-live="polite"></p>
+  <div class="acts">
+    <button class="primary" id="ok" type="button">Tarik sekarang</button>
+    <button id="batal" type="button">Batal</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  /* ====== UBAH DATA DI SINI ====== */
+  var SALDO_AWAL = 154799;                       // saldo dalam rupiah
+  var TRANSAKSI = [                            // jenis: 'masuk' atau 'keluar'; hariLalu: 0 = hari ini
+    { judul:'Penarikan Saldo', jumlah:25000, jenis:'keluar', hariLalu:0, jam:'11:01', metode:'Saldo' },
+    { judul:'Penarikan Saldo', jumlah:50000, jenis:'keluar', hariLalu:0, jam:'11:00', metode:'Saldo' },
+    { judul:'Penarikan Saldo', jumlah:120000, jenis:'keluar', hariLalu:0, jam:'09:18', metode:'Saldo' },
+    { judul:'Terima Uang',     jumlah:285675, jenis:'masuk',  hariLalu:0, jam:'02:27', metode:'QRIS'  },
+    { judul:'Penarikan Saldo', jumlah:100000, jenis:'keluar', hariLalu:1, jam:'23:02', metode:'Saldo' },
+    { judul:'Penarikan Saldo', jumlah:160000, jenis:'keluar', hariLalu:1, jam:'22:20', metode:'Saldo' },
+    { judul:'Terima Uang',     jumlah:250000, jenis:'masuk',  hariLalu:3, jam:'19:45', metode:'QRIS'  },
+    { judul:'Terima Uang',     jumlah:74124, jenis:'masuk',  hariLalu:10, jam:'14:10', metode:'QRIS' }
+  ];
+  /* ================================ */
+
+  var now = new Date();
+  var saldo = SALDO_AWAL, rentang = 1, semua = false, sembunyi = false;
+  var rp = new Intl.NumberFormat('id-ID');
+  function fmt(n){ return 'Rp' + rp.format(n); }
+  function $(id){ return document.getElementById(id); }
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function waktu(h, jam){
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - h);
+    var p = jam.split(':'); d.setHours(+p[0], +p[1], 0, 0); return d;
+  }
+  var data = TRANSAKSI.map(function(t){
+    return { judul:t.judul, jumlah:t.jumlah, jenis:t.jenis, metode:t.metode, waktu:waktu(t.hariLalu, t.jam) };
+  }).sort(function(a,b){ return b.waktu - a.waktu; });
+
+  function tgl(d){ return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
+  function ikon(jenis){
+    var p = jenis === 'masuk' ? 'M12 5v13M7 13l5 5 5-5' : 'M12 19V6M7 11l5-5 5 5';
+    return '<span class="ico ' + (jenis === 'masuk' ? 'in' : 'out') + '"><svg viewBox="0 0 24 24"><path d="' + p + '"/></svg></span>';
+  }
+
+  function render(){
+    $('saldo').textContent = sembunyi ? '••••••' : rp.format(saldo);
+    var mulai = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (rentang - 1));
+    var f = data.filter(function(t){ return t.waktu >= mulai; });
+    $('tgl').textContent = rentang === 1 ? tgl(now) : tgl(mulai).replace(/ \d{4}$/, '') + ' – ' + tgl(now);
+    $('masuk').textContent = fmt(f.filter(function(t){ return t.jenis === 'masuk'; })
+      .reduce(function(s,t){ return s + t.jumlah; }, 0));
+    $('total').textContent = f.length;
+
+    var tampil = semua ? f : f.slice(0, 10);
+    $('judulList').textContent = semua ? 'Semua transaksi' : '10 transaksi terbaru';
+    $('btnSemua').textContent = semua ? 'Ringkas' : 'Lihat semua';
+    $('btnSemua').hidden = f.length <= 10;
+    $('kosong').hidden = f.length > 0;
+
+    var ul = $('daftar'); ul.innerHTML = '';
+    tampil.forEach(function(t){
+      var li = document.createElement('li');
+      li.innerHTML = ikon(t.jenis) + '<div class="mid"><div class="t"></div><div class="d"></div></div><div class="r"><div class="a"></div><span class="m"></span></div>';
+      li.querySelector('.t').textContent = t.judul;
+      li.querySelector('.d').textContent = tgl(t.waktu) + ' • ' + pad(t.waktu.getHours()) + ':' + pad(t.waktu.getMinutes());
+      li.querySelector('.a').textContent = fmt(t.jumlah);
+      li.querySelector('.m').textContent = t.metode;
+      ul.appendChild(li);
+    });
+  }
+
+  $('btnMata').addEventListener('click', function(){
+    sembunyi = !sembunyi;
+    this.setAttribute('aria-pressed', String(sembunyi));
+    this.setAttribute('aria-label', sembunyi ? 'Tampilkan saldo' : 'Sembunyikan saldo');
+    render();
+  });
+
+  document.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      rentang = +c.getAttribute('data-r'); semua = false;
+      document.querySelectorAll('.chip').forEach(function(x){ x.setAttribute('aria-pressed', String(x === c)); });
+      render();
+    });
+  });
+  $('btnSemua').addEventListener('click', function(){ semua = !semua; render(); });
+
+  var dlg = $('dlg');
+  $('btnTarik').addEventListener('click', function(){
+    $('nom').value = ''; $('msg').textContent = '';
+    dlg.showModal(); $('nom').focus();
+  });
+  $('batal').addEventListener('click', function(){ dlg.close(); });
+  $('nom').addEventListener('input', function(){
+    var d = this.value.replace(/\D/g, '');
+    this.value = d ? rp.format(Number(d)) : '';
+  });
+  function tarik(){
+    var d = $('nom').value.replace(/\D/g, '');
+    if (!d || Number(d) <= 0){ $('msg').textContent = 'Isi nominal dengan angka lebih dari 0.'; return; }
+    var n = Number(d);
+    if (n > saldo){ $('msg').textContent = 'Saldo tidak cukup. Kurang ' + fmt(n - saldo) + '.'; return; }
+    saldo -= n;
+    data.unshift({ judul:'Penarikan Saldo', jumlah:n, jenis:'keluar', metode:'Saldo', waktu:new Date() });
+    dlg.close(); render();
+  }
+  $('ok').addEventListener('click', tarik);
+  $('nom').addEventListener('keydown', function(e){ if (e.key === 'Enter') tarik(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
